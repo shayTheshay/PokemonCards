@@ -71,10 +71,6 @@ def on_card_click(card, label):
 
                 
 
-    
-
-            
-
 
 def message_to_user(message:str):
     tkinter.messagebox.showinfo("Info",message)
