@@ -42,39 +42,49 @@ cardDeck = fixed_pokemon_deck(cardDeck, number_of_rows, number_of_columns)
 
 tmp_card = []
 cards_face_up = []
-two_cards = 0
+num_of_moves = 0
 
-def on_card_click(card, label):
-    global two_cards, cards_face_up, tmp_card
 
-    if card in cards_face_up or card in tmp_card:
-        return
-        
+def change_card_image(card:cardPokemon, label:tkinter.Label):
     card.change_orientation()
     img_path = card.image_front if card.orientation == "face_up" else card.image_back
     image = Image.open(img_path).resize((width, height))
     photo = ImageTk.PhotoImage(image)
     label.configure(image=photo)
     label.image = photo
-    #photo_refs.append(photo)
 
-    tmp_card.append((card, label))
-    two_cards += 1
-    if two_cards == 2:
-        two_cards = 0
-        print(two_cards)
-        if tmp_card[0].id == tmp_card[1].id:
-            cards_face_up.append(tmp_card[0])
-            cards_face_up.append(tmp_card[1])
-            tmp_card.clear()
-           
 
-                
+def reset_two_cards():
+    global two_cards
+    two_cards = 0
 
-    
+def on_card_click(card:cardPokemon, label:tkinter.Label): 
+    global cards_face_up, tmp_card, num_of_moves
+    num_of_moves += 1
+    if (card, label) not in cards_face_up:
+        if (card, label) in tmp_card and card.orientation == "face_up":
+            change_card_image(card, label)
+            tmp_card.remove((card, label))
+            return
 
-            
+        tmp_card.append((card, label))
+        change_card_image(card, label)
+        label.update_idletasks()
 
+        if len(tmp_card) == 2:
+            def evaluate_match(card:cardPokemon, label:tkinter.Label):
+                if tmp_card[0][0] == tmp_card[1][0]:
+                    if card.orientation != "face_up":
+                        change_card_image(card, label)
+                    for ((card, label)) in tmp_card:
+                        cards_face_up.append((card, label))
+                else:
+                    for ((card, label)) in tmp_card:
+                        change_card_image(card, label)                
+                tmp_card.clear()
+            root.after(300, evaluate_match(card, label))
+    if(len(cards_face_up) == number_of_rows * number_of_columns):
+        message_to_user("YOU Won! to play again please close and open again the program")    
 
 def message_to_user(message:str):
     tkinter.messagebox.showinfo("Info",message)
