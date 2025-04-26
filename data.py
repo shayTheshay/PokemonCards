@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 image_folder = "images/front_images"
 image_files = os.listdir(image_folder)
 
+#move to sepeare file
 class cardPokemon:
     def __init__(self, id, image_front, image_back = "images/pokemon_card_backside.png", orientation = "face_down"):
             self.id = id
@@ -18,8 +19,6 @@ class cardPokemon:
         else:
             self.orientation = "face_up"
     
-
-
 
 cardDeck = []
 
