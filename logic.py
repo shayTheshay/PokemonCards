@@ -7,7 +7,7 @@ def run_game(root, screen_width, screen_height, base_color, mainframe):
 
 
     screen.activate_screen(root, screen_width, screen_height, base_color, mainframe)
-
+    
 
 
 
